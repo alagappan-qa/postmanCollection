@@ -1,0 +1,241 @@
+{
+	"info": {
+		"_postman_id": "66fa8a6a-e265-4eaa-8a17-180d0e82777d",
+		"name": "space_test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "latest",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// pm.test(\"Body matches string\", function () {\r",
+							"\r",
+							"//         pm.expect(pm.response.text()).to.include(pm.environment.get(\"validLicensePlate\"));\r",
+							"        \r",
+							"// });\r",
+							"\r",
+							"    var body = JSON.parse(responseBody);\r",
+							"    console.log(body);\r",
+							"    console.log(body.rocket);\r",
+							"    console.log(body.capsules[0]);\r",
+							"pm.environment.set(\"rocketId\", body.rocket);\r",
+							"pm.environment.set(\"capsuleId\", body.capsules[0]);\r",
+							"pm.environment.set(\"shipId\", body.ships[0]);\r",
+							"pm.environment.set(\"payloadId\", body.payloads[0]);\r",
+							"pm.environment.set(\"launchpadId\", body.launchpad);\r",
+							"pm.environment.set(\"coreId\", body.cores[0].core);\r",
+							"\r",
+							"console.log(pm.environment.get(\"rocketId\"));\r",
+							"console.log(pm.environment.get(\"capsuleId\"));\r",
+							"console.log(pm.environment.get(\"shipId\"));\r",
+							"console.log(pm.environment.get(\"payloadId\"));\r",
+							"console.log(pm.environment.get(\"launchpadId\"));\r",
+							"/*\r",
+							"pm.globals.set(\"truckId1\", body.truckId);\r",
+							"*/"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.spacexdata.com/v4/launches/latest",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spacexdata",
+						"com"
+					],
+					"path": [
+						"v4",
+						"launches",
+						"latest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "rocketInfo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"String Expectation from the response\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"height\")\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.spacexdata.com/v4/rockets/{{rocketId}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spacexdata",
+						"com"
+					],
+					"path": [
+						"v4",
+						"rockets",
+						"{{rocketId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LaunchPad",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Rocket ID validation from the list of values\", function () {\r",
+							"    var body = JSON.parse(responseBody);\r",
+							"    let rocket_length=body.rockets.length;\r",
+							"    for(let i=0;i<rocket_length;i++){\r",
+							"      //  console.log(body.rockets[i]);\r",
+							"        if(pm.environment.get(\"rocketId\") === body.rockets[i]){\r",
+							"            pm.expect(true).to.equal(true);\r",
+							"        }\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.spacexdata.com/v4/launchpads/{{launchpadId}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spacexdata",
+						"com"
+					],
+					"path": [
+						"v4",
+						"launchpads",
+						"{{launchpadId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CoreId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var body = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.environment.set(\"launchId\", body.launches[0]);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.spacexdata.com/v4/cores/{{coreId}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spacexdata",
+						"com"
+					],
+					"path": [
+						"v4",
+						"cores",
+						"{{coreId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ShipId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Launch ID validation from list of values\", function () {\r",
+							"    var body = JSON.parse(responseBody);\r",
+							"    let launch_length=body.launches.length;\r",
+							"    for(let i=0;i<launch_length;i++){\r",
+							"       // console.log(body.launches[i]);\r",
+							"        if(pm.environment.get(\"launchId\") === body.launches[i]){\r",
+							"            pm.expect(true).to.equal(true);\r",
+							"        }\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.spacexdata.com/v4/ships/{{shipId}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spacexdata",
+						"com"
+					],
+					"path": [
+						"v4",
+						"ships",
+						"{{shipId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
